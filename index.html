@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Envoyer un email</title>
+</head>
+<body>
+
+  <form id="emailForm">
+    <label for="to">Destinataire :</label>
+    <input type="email" id="to" name="to" required>
+    <br>
+    <label for="subject">Sujet :</label>
+    <input type="text" id="subject" name="subject" required>
+    <br>
+    <label for="message">Message :</label>
+    <textarea id="message" name="message" required></textarea>
+    <br>
+    <button type="submit">Envoyer</button>
+  </form>
+  <h2>Envoyer un email</h2>
+  <script>
+    const form = document.getElementById('emailForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const to = document.getElementById('to').value;
+      const subject = document.getElementById('subject').value;
+      const message = document.getElementById('message').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ to, subject, message }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert(result.success);
+        } else {
+          alert(result.error);
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Erreur lors de l\'envoi.');
+      }
+    });
+  </script>
+</body>
+</html>
